@@ -1,17 +1,23 @@
 import { betterAuth, type Auth, type BetterAuthOptions } from 'better-auth';
-import { drizzleAdapter } from '@better-auth/drizzle-adapter';
+import { drizzleAdapter } from '@better-auth/drizzle-adapter/relations-v2';
 import { drizzle } from 'drizzle-orm/postgres-js';
-import { AUTH_SCHEMA_NAME } from '@/auth/auth.constants.js';
+// Relative import: this file can be loaded outside Nest's own module resolution, which does
+// not understand the "@/" alias.
+import { account, authRelations, session, user, verification } from './auth.schema.js';
 
-// Loaded standalone by the Better Auth CLI, outside Nest's own env loading.
+// Falls back to loading .env directly, for when this file runs outside Nest's own bootstrap.
 if (!process.env.DATABASE_URL) {
   process.loadEnvFile();
 }
 
-const db = drizzle(process.env.DATABASE_URL as string);
+const db = drizzle(process.env.DATABASE_URL as string, { relations: authRelations });
 
 const authOptions: BetterAuthOptions = {
-  database: drizzleAdapter(db, { provider: 'pg', schemaName: AUTH_SCHEMA_NAME }),
+  database: drizzleAdapter(db, {
+    provider: 'pg',
+    schemaName: 'auth',
+    schema: { user, session, account, verification },
+  }),
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
   emailAndPassword: {
