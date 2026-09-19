@@ -1,13 +1,29 @@
 import { NestFactory } from '@nestjs/core';
-import { DEFAULT_PORT } from '@/common/common.constants.js';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import { Logger, PinoLogger } from 'nestjs-pino';
 import { AppModule } from '@/app.module.js';
-import { setupSwagger } from '@/swagger/setup-swagger.js';
+import { setupCompression } from '@/infra/common/setup-compression.js';
+import { setupProcessErrorHandlers } from '@/infra/common/setup-process-error-handlers.js';
+import { setupSecurity } from '@/infra/common/setup-security.js';
+import { setupVersioning } from '@/infra/common/setup-versioning.js';
+import { AppConfigService } from '@/infra/config/app-config.service.js';
+import { setupSwagger } from '@/infra/swagger/setup-swagger.js';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ trustProxy: true }), {
+    bufferLogs: true,
+  });
+  app.useLogger(app.get(Logger));
+  setupProcessErrorHandlers(await app.resolve(PinoLogger));
+  app.enableShutdownHooks();
+  setupVersioning(app);
 
-  setupSwagger(app);
+  const appConfigService = app.get(AppConfigService);
 
-  await app.listen(process.env.PORT ?? DEFAULT_PORT);
+  await setupSecurity(app, appConfigService);
+  await setupCompression(app);
+  setupSwagger(app, appConfigService);
+
+  await app.listen(appConfigService.port);
 }
 await bootstrap();
