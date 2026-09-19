@@ -15,6 +15,10 @@ export class AppConfigService {
     return this.configService.get('NODE_ENV', { infer: true });
   }
 
+  get databaseUrl(): string {
+    return this.configService.get('DATABASE_URL', { infer: true });
+  }
+
   get corsAllowedOrigins(): string[] {
     return this.configService.get('CORS_ALLOWED_ORIGINS', { infer: true });
   }

@@ -10,6 +10,7 @@ import {
 const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(DEFAULT_PORT),
   NODE_ENV: z.string().default(DEFAULT_NODE_ENV),
+  DATABASE_URL: z.string().min(1),
   CORS_ALLOWED_ORIGINS: z
     .string()
     .default(DEFAULT_CORS_ALLOWED_ORIGINS)

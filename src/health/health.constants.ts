@@ -1,4 +1,5 @@
 export const HEALTH_HEAP_INDICATOR_KEY = 'memory_heap';
+export const HEALTH_DATABASE_INDICATOR_KEY = 'database';
 
 const BYTES_PER_MEGABYTE = 1024 * 1024;
 export const HEAP_MEMORY_THRESHOLD_BYTES = 300 * BYTES_PER_MEGABYTE;
