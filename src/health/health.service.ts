@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { HealthCheckResult, HealthCheckService, HealthIndicatorService, MemoryHealthIndicator } from '@nestjs/terminus';
-import type postgres from 'postgres';
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import {
   HEALTH_DATABASE_INDICATOR_KEY,
   HEALTH_HEAP_INDICATOR_KEY,
@@ -14,7 +14,7 @@ export class HealthService {
     private readonly healthCheckService: HealthCheckService,
     private readonly memoryHealthIndicator: MemoryHealthIndicator,
     private readonly healthIndicatorService: HealthIndicatorService,
-    @Inject(DB_CLIENT) private readonly dbClient: postgres.Sql,
+    @Inject(DB_CLIENT) private readonly db: PostgresJsDatabase,
   ) {}
 
   checkLiveness(): Promise<HealthCheckResult> {
@@ -26,7 +26,7 @@ export class HealthService {
       () => this.memoryHealthIndicator.checkHeap(HEALTH_HEAP_INDICATOR_KEY, HEAP_MEMORY_THRESHOLD_BYTES),
       () =>
         this.healthIndicatorService.check(HEALTH_DATABASE_INDICATOR_KEY).attempt(async () => {
-          await this.dbClient`SELECT 1`;
+          await this.db.execute('select 1');
         }),
     ]);
   }

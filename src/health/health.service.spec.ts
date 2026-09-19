@@ -10,14 +10,14 @@ describe('HealthService', () => {
   let memoryHealthIndicator: { checkHeap: ReturnType<typeof vi.fn> };
   let healthIndicatorService: { check: ReturnType<typeof vi.fn> };
   let dbAttempt: ReturnType<typeof vi.fn>;
-  let dbClient: ReturnType<typeof vi.fn>;
+  let db: { execute: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     healthCheckService = { check: vi.fn().mockResolvedValue({ status: 'ok', info: {}, error: {}, details: {} }) };
     memoryHealthIndicator = { checkHeap: vi.fn() };
     dbAttempt = vi.fn();
     healthIndicatorService = { check: vi.fn().mockReturnValue({ attempt: dbAttempt }) };
-    dbClient = vi.fn().mockResolvedValue(undefined);
+    db = { execute: vi.fn().mockResolvedValue(undefined) };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -25,7 +25,7 @@ describe('HealthService', () => {
         { provide: HealthCheckService, useValue: healthCheckService },
         { provide: MemoryHealthIndicator, useValue: memoryHealthIndicator },
         { provide: HealthIndicatorService, useValue: healthIndicatorService },
-        { provide: DB_CLIENT, useValue: dbClient },
+        { provide: DB_CLIENT, useValue: db },
       ],
     }).compile();
 
@@ -64,7 +64,7 @@ describe('HealthService', () => {
       expect(dbAttempt).toHaveBeenCalled();
       const attemptFn = dbAttempt.mock.calls[0][0];
       await attemptFn();
-      expect(dbClient).toHaveBeenCalled();
+      expect(db.execute).toHaveBeenCalledWith('select 1');
     });
   });
 });
