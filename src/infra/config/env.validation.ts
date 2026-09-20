@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { MESSAGE_JOIN_SEPARATOR } from '@/infra/common/common.constants.js';
 import {
   CORS_ORIGIN_SEPARATOR,
+  DEFAULT_BRAND_NAME,
   DEFAULT_CORS_ALLOWED_ORIGINS,
   DEFAULT_NODE_ENV,
   DEFAULT_PORT,
@@ -10,7 +11,10 @@ import {
 const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(DEFAULT_PORT),
   NODE_ENV: z.string().default(DEFAULT_NODE_ENV),
+  BRAND_NAME: z.string().default(DEFAULT_BRAND_NAME),
   DATABASE_URL: z.string().min(1),
+  RESEND_API_KEY: z.string().min(1),
+  RESEND_FROM_EMAIL: z.string().min(1),
   CORS_ALLOWED_ORIGINS: z
     .string()
     .default(DEFAULT_CORS_ALLOWED_ORIGINS)

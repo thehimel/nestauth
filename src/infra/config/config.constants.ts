@@ -5,3 +5,5 @@ export const NODE_ENV_PRODUCTION = 'production';
 
 export const CORS_ORIGIN_SEPARATOR = ';';
 export const DEFAULT_CORS_ALLOWED_ORIGINS = '';
+
+export const DEFAULT_BRAND_NAME = 'Core';

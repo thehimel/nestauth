@@ -15,6 +15,10 @@ export class AppConfigService {
     return this.configService.get('NODE_ENV', { infer: true });
   }
 
+  get brandName(): string {
+    return this.configService.get('BRAND_NAME', { infer: true });
+  }
+
   get databaseUrl(): string {
     return this.configService.get('DATABASE_URL', { infer: true });
   }
