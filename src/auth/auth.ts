@@ -4,7 +4,7 @@ import { drizzleAdapter } from '@better-auth/drizzle-adapter/relations-v2';
 import { drizzle } from 'drizzle-orm/postgres-js';
 // Relative imports: this file can be loaded outside Nest's own module resolution, which does
 // not understand the "@/" alias.
-import { CORS_ORIGIN_SEPARATOR, NODE_ENV_PRODUCTION } from '../infra/config/config.constants.js';
+import { CORS_ORIGIN_SEPARATOR, IP_ADDRESS_HEADERS, NODE_ENV_PRODUCTION } from '../infra/config/config.constants.js';
 import { sendMagicLinkEmail } from '../infra/mail/mail.js';
 import { account, authRelations, session, user, verification } from './auth.schema.js';
 
@@ -31,6 +31,9 @@ const authOptions: BetterAuthOptions = {
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
   trustedOrigins,
+  advanced: {
+    ipAddress: { ipAddressHeaders: IP_ADDRESS_HEADERS },
+  },
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,

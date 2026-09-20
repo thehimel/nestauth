@@ -81,7 +81,8 @@
   },
   "pnpm": {
     "overrides": {
-      "@better-auth/utils": "0.4.2"
+      "@better-auth/utils": "0.4.2",
+      "fastify": "$fastify"
     }
   }
 }

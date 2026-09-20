@@ -27,8 +27,8 @@ describe('IndexController (e2e)', () => {
     await app.getHttpAdapter().getInstance().ready();
   });
 
-  it('/v1 (GET)', () => {
-    return request(app.getHttpServer()).get('/v1').expect(200).expect(HELLO_WORLD_MESSAGE);
+  it('/ (GET)', () => {
+    return request(app.getHttpServer()).get('/').expect(200).expect(HELLO_WORLD_MESSAGE);
   });
 
   afterEach(async () => {

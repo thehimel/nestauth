@@ -12,6 +12,7 @@ import { ConfigModule } from '@/infra/config/config.module.js';
         pinoHttp: {
           transport: appConfigService.isProduction ? undefined : { target: 'pino-pretty' },
           redact: ['req.headers.authorization', 'req.headers.cookie', 'res.headers["set-cookie"]'],
+          autoLogging: false,
         },
       }),
     }),
