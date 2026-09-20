@@ -12,6 +12,7 @@ import { setupSwagger } from '@/infra/swagger/setup-swagger.js';
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ trustProxy: true }), {
     bufferLogs: true,
+    bodyParser: false,
   });
   app.useLogger(app.get(Logger));
   setupProcessErrorHandlers(await app.resolve(PinoLogger));

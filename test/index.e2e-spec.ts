@@ -16,7 +16,9 @@ describe('IndexController (e2e)', () => {
       imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication<NestFastifyApplication>(new FastifyAdapter({ trustProxy: true }));
+    app = moduleFixture.createNestApplication<NestFastifyApplication>(new FastifyAdapter({ trustProxy: true }), {
+      bodyParser: false,
+    });
     setupVersioning(app);
     await setupSecurity(app, app.get(AppConfigService));
     await setupCompression(app);
